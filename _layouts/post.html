@@ -1,0 +1,7 @@
+---
+layout: default
+---
+<h2>{{ page.title }}</h2>
+<small>{{ page.date | date_to_string }} by {{ page.author | default: site.author }}</small>
+<div class="mt-2"></div>
+{{ content }}

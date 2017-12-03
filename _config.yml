@@ -1,0 +1,24 @@
+title: lukad
+author: Luka Dornhecker
+email: luka@dornhecker.me
+description: >-
+  Personal blog where I write about random tech stuff.
+baseurl: ""
+url: "https://luka.dornhecker.me"
+twitter_username: lukaimneuland
+github_username:  lukad
+lang: en
+
+# Build settings
+markdown: kramdown
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
+plugins:
+  - jekyll-feed
+  - jekyll-sitemap
+  - jekyll-last-modified-at
+  - jekyll-default-layout
+
+feed:
+  path: index.xml
