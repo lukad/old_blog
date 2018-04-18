@@ -22,3 +22,7 @@ plugins:
 
 feed:
   path: index.xml
+
+slim:
+  pretty: true
+  format: html5
