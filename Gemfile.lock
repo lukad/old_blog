@@ -6,6 +6,8 @@ GEM
     colorator (1.1.0)
     ffi (1.9.18)
     forwardable-extended (2.6.0)
+    htmlbeautifier (1.3.1)
+    htmlcompressor (0.4.0)
     jekyll (3.6.2)
       addressable (~> 2.4)
       colorator (~> 1.0)
@@ -28,6 +30,10 @@ GEM
       sass (~> 3.4)
     jekyll-sitemap (1.1.1)
       jekyll (~> 3.3)
+    jekyll-tidy (0.2.2)
+      htmlbeautifier
+      htmlcompressor
+      jekyll
     jekyll-watch (1.5.0)
       listen (~> 3.0, < 3.1)
     kramdown (1.16.2)
@@ -60,7 +66,8 @@ DEPENDENCIES
   jekyll-feed
   jekyll-last-modified-at
   jekyll-sitemap
+  jekyll-tidy
   rouge
 
 BUNDLED WITH
-   1.16.0
+   1.16.1
