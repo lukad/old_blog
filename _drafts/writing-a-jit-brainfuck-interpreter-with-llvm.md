@@ -53,15 +53,18 @@ can be represented in OCaml as
   (Move 2); Write]
 ```
 
+### The Parser
+
 Parsing brainfuck is pretty straightforward except for the loop which needs to be parsed recursively.
 I used Angstrom, a parser combinator inspired by the amazing Parsec library for [Haskell](https://wiki.haskell.org/Parsec).
 
-Since explaining parser combinators is out of scope for this blog post and because you can easily get away with parsing by hand, I'm just going to dump my parser code here with a few comments.
+Since explaining parser combinators is out of scope for this blog post, I'm just going to dump my parser code here with a few comments.
 
 ``` ocaml
 (* reader.ml *)
 (* I used reader instead of parser because reader is a keyword of the Camlp4 extension *)
 open Angstrom
+open Ast
 
 (* Parse all characters that are not part of Brainfucks instruction set *)
 let is_comment c = not (List.mem c ['+'; '-'; '>'; '<'; ','; '.'; '['; ']'])
@@ -71,14 +74,14 @@ let comment = many (satisfy is_comment)
 let chars c f = many1 (char c) >>= f
 
 (* Use the chars parser defined above and return `Add`/`Move` with the length of the result *)
-let plus = chars '+' (fun s -> return (Ast.Add (List.length s)))
-let minus = chars '-' (fun s -> return (Ast.Add ~-(List.length s)))
-let left = chars '>' (fun s -> return (Ast.Move (List.length s)))
-let right = chars '<' (fun s -> return (Ast.Move ~-(List.length s)))
+let plus = chars '+' (fun s -> return (Add (List.length s)))
+let minus = chars '-' (fun s -> return (Add ~-(List.length s)))
+let left = chars '>' (fun s -> return (Move (List.length s)))
+let right = chars '<' (fun s -> return (Move ~-(List.length s)))
 
 (* Consume a single character and return `Read`/`Write` *)
-let read = char ',' *> return Ast.Read
-let write = char '.' *> return Ast.Write
+let read = char ',' *> return Read
+let write = char '.' *> return Write
 
 (* Parse one of the simple instructions which may be followed by a comment *)
 let simple = (plus <|> minus <|> left <|> right <|> read <|> write) <* comment
@@ -87,7 +90,7 @@ let simple = (plus <|> minus <|> left <|> right <|> read <|> write) <* comment
  * and return the result of `p` as a `Loop`
  *)
 let loop p = (char '[' *> p <* char ']') <* comment
-                   >>= fun body -> return (Ast.Loop body)
+                   >>= fun body -> return (Loop body)
 
 (* Define a parser which parses a sequence of either `simple` or `loop program` *)
 let program = fix (fun program -> comment *> many (simple <|> loop program)) <* end_of_input
