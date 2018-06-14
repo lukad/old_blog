@@ -15,11 +15,13 @@ kramdown:
   input: GFM
   syntax_highlighter: rouge
 plugins:
+  - jekyll-compose
   - jekyll-default-layout
   - jekyll-feed
   - jekyll-last-modified-at
   - jekyll-sitemap
   - jekyll-tidy
+  - jekyll-toc
 
 feed:
   path: index.xml
