@@ -98,3 +98,44 @@ let program = fix (fun program -> comment *> many (simple <|> loop program)) <* 
 (* This is the main function to be used to parse a string of Brainfuck source code *)
 let read_string = parse_string program
 ```
+
+## Basic Optimization
+
+Now that we can parse Brainfuck into our AST it's time to apply some simple optimizations.
+We will recursively walk our AST and check if the current instruction can be combined with the next instruction.
+
+We will repeat this step until the AST does not change anymore.
+
+``` ocaml
+(* optimizer.ml *)
+open Ast
+
+let rec opt = function
+  (* Empty lists stay empty *)
+  | [] -> []
+
+  (* Eliminate Add/Move instructions with value 0 *)
+  | Add 0  :: rest -> opt rest
+  | Move 0 :: rest -> opt rest
+
+  (* Combine consecutive Add/Move instructions by summing their values *)
+  | Add a  :: Add b  :: rest -> Add (a + b) :: opt rest
+  | Move a :: Move b :: rest -> Move (a + b) :: opt rest
+
+  (* Eliminate empty loops *)
+  | Loop []         :: rest ->                    opt rest
+  (* Optimize the loop body *)
+  | Loop body       :: rest -> Loop (opt body) :: opt rest
+
+  (* Otherwise do nothing to the current instruction *)
+  | ins :: rest -> ins :: (opt rest)
+
+let optimize prog =
+  let rec optimize a b =
+    if a = b then
+      a
+    else
+      optimize b (opt b)
+  in
+  optimize prog (opt prog)
+```
