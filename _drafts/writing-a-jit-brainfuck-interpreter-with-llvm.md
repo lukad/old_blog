@@ -1,12 +1,40 @@
 ---
 layout: post
-title: Writing a JIT Brainfuck interpreter with LLVM
+title: Writing a JIT Brainfuck interpreter with LLVM and OCaml
 toc: true
 ---
 
-## What is Brainfuck?
+## Introduction
 
-If you don't know what Brainfuck is, read the [Wikipedia article on Brainfuck](https://en.wikipedia.org/wiki/Brainfuck) and continue reading here.
+Welcome to my Brainfuck interpreter tutorial! In this post I will go over how I created
+[my own LLVM based Brainfuck interpreter](https://github.com/lukad/obf) with OCaml.
+
+## Rationale
+
+I'll briefly explain my choice of tools here.
+
+### Why Brainfuck
+
+Although brainfuck is an [esoteric programming language](https://en.wikipedia.org/wiki/Esoteric_programming_language) without any serious real world use cases, it is easy enough to understand but at the same time challenging enough to implement to serve as a coding exercise when learning a new language or a new framework. Of course it's still possible to write really complex in Brainfuck. Take this fibonacci
+generator for example `>-[[<+>>>-<-<+]>]` or this [mandelbrot viewer](http://esoteric.sange.fi/brainfuck/utils/mandelbrot/) or this [game of life implementation](http://www.linusakesson.net/programming/brainfuck/).
+
+### Why OCaml
+
+When I first tried to learn LLVM I went through the official [Kaleidoscope tutorial](https://llvm.org/docs/tutorial/) using C++. I found it extremely frustrating because it was pretty outdated and I wanted to use the current LLVM version. The OCaml version of that tutorial wasn't any better but I liked OCaml's LLVM bindings and their [documentation](https://llvm.moe/ocaml/) a lot more.
+
+OCaml is even being used in the real world by some pretty big players.
+To name a few interesting projects:
+
+* [Hack (Facebook)](https://github.com/facebook/hhvm/tree/master/hphp/hack) A language targeting the HHVM
+* [ReasonML (Facebook)](https://reasonml.github.io/): An alternative OCaml syntax
+* [BuckleScript (Bloomberg)](https://bucklescript.github.io/): OCaml to JS compiler
+* [MirageOS](https://mirage.io/): Library for building [unikernels](https://en.wikipedia.org/wiki/Unikernel)
+* [Unison](https://www.cis.upenn.edu/~bcpierce/unison/): File synchronization tool
+* [Emscripten](http://kripken.github.io/emscripten-site/): An LLVM-to-JavaScript Compiler
+
+### Why LLVM
+
+`TODO`
 
 ## AST & Parsing
 
@@ -16,7 +44,9 @@ a suitable data structure.
 ### The Abstract Syntax Tree
 
 An abstract syntax tree is a tree representation of some source code.
-This is very simple to model for brainfuck since we don't have any expressions, operators, etc., it's just a sequence of instructions. Except for the loop (`[]`) which is itself a sequence of instructions.
+This is very simple to model for brainfuck since we don't have any expressions, operators, etc.,
+it's just a sequence of instructions. Except for the loop (`[]`), which is itself a sequence of
+instructions.
 
 So let's define an enum for our instructions and a type to repreresent the instruction sequence.
 
@@ -33,7 +63,7 @@ and instruction =
   ;;
 ```
 
-Note that `Move` and `Add` are of `int`. This allows us to combine conesecutive `+`/`-` and `>`/`<` into one instruction.
+Note that `Move` and `Add` are of `int`. This allows us to combine coesecutive `+`/`-` and `>`/`<` into one instruction.
 
 With this AST definition the following brainfuck code
 
@@ -56,13 +86,13 @@ can be represented in OCaml as
 ### The Parser
 
 Parsing brainfuck is pretty straightforward except for the loop which needs to be parsed recursively.
-I used Angstrom, a parser combinator inspired by the amazing Parsec library for [Haskell](https://wiki.haskell.org/Parsec).
+I used Angstrom, a parser combinator inspired by the amazing [Parsec](https://wiki.haskell.org/Parsec) library for Haskell.
 
 Since explaining parser combinators is out of scope for this blog post, I'm just going to dump my parser code here with a few comments.
 
 ``` ocaml
 (* reader.ml *)
-(* I used reader instead of parser because reader is a keyword of the Camlp4 extension *)
+(* I used reader instead of parser because parser is a reserved keyword of the Camlp4 extension *)
 open Angstrom
 open Ast
 
@@ -99,6 +129,15 @@ let program = fix (fun program -> comment *> many (simple <|> loop program)) <* 
 let read_string = parse_string program
 ```
 
+``` ocaml
+"++++ [> ++++ [> ++++ < -] < -] >> ." |> Reader.read_string |> print_endline
+(*
+ *
+ *
+ *
+ *)
+```
+
 ## Basic Optimization
 
 Now that we can parse Brainfuck into our AST it's time to apply some simple optimizations.
@@ -130,6 +169,7 @@ let rec opt = function
   (* Otherwise do nothing to the current instruction *)
   | ins :: rest -> ins :: (opt rest)
 
+(* Optimize the program until it stops changing *)
 let optimize prog =
   let rec optimize a b =
     if a = b then
