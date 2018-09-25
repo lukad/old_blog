@@ -9,16 +9,16 @@ toc: true
 Welcome to my Brainfuck interpreter tutorial! In this post I will go over how I created
 [my own LLVM based Brainfuck interpreter](https://github.com/lukad/obf) with OCaml.
 
-## Rationale
+## The tools
 
-I'll briefly explain my choice of tools here.
+Let's talk about the tools I used.
 
-### Why Brainfuck
+### Brainfuck
 
 Although brainfuck is an [esoteric programming language](https://en.wikipedia.org/wiki/Esoteric_programming_language) without any serious real world use cases, it is easy enough to understand but at the same time challenging enough to implement to serve as a coding exercise when learning a new language or a new framework. Of course it's still possible to write really complex in Brainfuck. Take this fibonacci
 generator for example `>-[[<+>>>-<-<+]>]` or this [mandelbrot viewer](http://esoteric.sange.fi/brainfuck/utils/mandelbrot/) or this [game of life implementation](http://www.linusakesson.net/programming/brainfuck/).
 
-### Why OCaml
+### OCaml
 
 When I first tried to learn LLVM I went through the official [Kaleidoscope tutorial](https://llvm.org/docs/tutorial/) using C++. I found it extremely frustrating because it was pretty outdated and I wanted to use the current LLVM version. The OCaml version of that tutorial wasn't any better but I liked OCaml's LLVM bindings and their [documentation](https://llvm.moe/ocaml/) a lot more.
 
@@ -32,9 +32,9 @@ To name a few interesting projects:
 * [Unison](https://www.cis.upenn.edu/~bcpierce/unison/): File synchronization tool
 * [Emscripten](http://kripken.github.io/emscripten-site/): An LLVM-to-JavaScript Compiler
 
-### Why LLVM
+### LLVM
 
-`TODO`
+LLVM ->
 
 ## AST & Parsing
 
