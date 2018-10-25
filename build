@@ -1,0 +1,9 @@
+#!/bin/bash
+
+if [[ "${HEAD}" == post/* ]];
+then
+    echo "Building with --draft"
+    jekyll build --draft
+else
+    jekyll build
+fi
