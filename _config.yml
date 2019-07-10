@@ -9,6 +9,13 @@ twitter_username: lukaimneuland
 github_username:  lukad
 lang: en
 
+defaults:
+  - scope:
+      path: ""
+      type: "posts"
+    values:
+      comments: true
+
 # Build settings
 markdown: kramdown
 kramdown:
