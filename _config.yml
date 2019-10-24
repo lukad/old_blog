@@ -9,6 +9,10 @@ twitter_username: lukaimneuland
 github_username:  lukad
 lang: en
 
+exclude:
+  - netlify.toml
+  - build
+
 defaults:
   - scope:
       path: ""
