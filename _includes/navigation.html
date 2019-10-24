@@ -1,11 +1,16 @@
 <nav class="navbar navbar-expand-md navbar-dark bg-dark mb-2">
   <div class="container"><a href="/" class="navbar-brand">lukad</a>
-    <button type="button" data-toggle="collapse" data-target="#collapse" class="navbar-toggler"><span class="navbar-toggler-icon"></span></button>
+    <button type="button" data-toggle="collapse" data-target="#collapse" class="navbar-toggler" aria-controls="collapse"
+      aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
     <div id="collapse" class="collapse navbar-collapse">
       <ul class="navbar-nav mr-auto">
         {% for p in site.pages %}
         {% if p.nav %}
-        <li class="nav-item"><a href="{{ p.url }}" class="nav-link{% if page.url == p.url %} active{% endif %}">{{ p.title }}</a></li>
+          <li class="nav-item">
+            <a href="{{ p.url }}" class="nav-link{% if page.url == p.url %} active{% endif %}">{{ p.title }}</a>
+          </li>
         {% endif %}
         {% endfor %}
       </ul>

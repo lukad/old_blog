@@ -1,7 +1,11 @@
 ---
 layout: default
+comments: true
 ---
 <h2>{{ page.title }}</h2>
 <small>{{ page.date | date_to_string }} by {{ page.author | default: site.author }}</small>
 <div class="mt-2"></div>
+{% if page.toc %}
+  {% include toc.html html=content %}
+{% endif %}
 {{ content }}
