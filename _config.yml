@@ -8,6 +8,7 @@ url: "https://luka.dornhecker.me"
 twitter_username: lukaimneuland
 github_username:  lukad
 lang: en
+permalink: /:categories/:year/:month/:day/:title
 
 exclude:
   - netlify.toml
