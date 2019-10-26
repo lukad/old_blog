@@ -13,6 +13,8 @@ permalink: /:categories/:year/:month/:day/:title
 exclude:
   - netlify.toml
   - build
+  - Gemfile
+  - Gemfile.lock
 
 defaults:
   - scope:
