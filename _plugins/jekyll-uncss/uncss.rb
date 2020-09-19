@@ -55,6 +55,7 @@ Jekyll::Hooks.register(:site, :post_write) do |site|
   files.each do |path|
     doc = File.open(path) { |file| Nokogiri::HTML(file) }
     links = doc.css('link[rel="stylesheet"]')
+    next if links.empty?
 
     link = Nokogiri::XML::Node.new('link', doc)
     link['rel'] = 'stylesheet'

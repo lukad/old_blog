@@ -30,7 +30,6 @@ kramdown:
   syntax_highlighter: rouge
 plugins:
   - jekyll-compose
-  - jekyll-default-layout
   - jekyll-feed
   - jekyll-last-modified-at
   - jekyll-sitemap
